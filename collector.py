@@ -4,6 +4,7 @@ import re
 import os
 import psutil
 from datetime import date, timedelta, datetime
+from time import strftime
 
 def logged_in_users():
     W = 'w'
@@ -75,6 +76,7 @@ def checkIfProcessRunning(processName):
 
 
 def lastSealedBlock():
+    print("Seal check")
     sealed_cnt = 0
     sealed_inv = 0
     f = open("/var/log/nethermind.log", "r")
@@ -97,9 +99,10 @@ def lastSealedBlock():
             i_time = temp[1].split('|')[0]
             seal_data_inv.append([i_date, i_time])
 
-    # 2021-06-23 02:14:19.2989|Invalid block header (0x2f69f24ae1f6dc8f9c6681166f599217d5ce702e589cb5810d1d9a6de0043fdc) - seal parameters incorrect
-    # Adjust the time zone if required.
-    time_string = "{}T{}+00:00".format(s_date, s_time)
+    timeZone = strftime("%z")
+    timeZone = timeZone[:3] + ":" + timeZone[3:]
+    time_string = "{}T{}{}".format(s_date, s_time, timeZone)
+    print(time_string)
     return (time_string)
 
 
