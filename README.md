@@ -31,6 +31,10 @@ To push stats up to the NodeHeap service at a regular interval, you'll need to r
 7) To make sure it's working, tail the logs in the directory (via `tail -f current.log`) and wait.
 8) Refresh the NodeHeap page and see that your stats are coming in.
 
+#### Logs
+
+You can inspect logs from the script at `/opt/nodeheap/current.log`. Logs from the cronjob can be found at `/var/log/syslog`. The relevant lines can be found by doing `grep` on `nodeheap`.
+
 ## Sit back and relax
 
 NodeHeap will send notifications when your node is not sending stats, offline, not sealing, disconnected from Tor, or the balance is not changing as expected.
