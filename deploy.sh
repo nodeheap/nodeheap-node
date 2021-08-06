@@ -15,7 +15,7 @@ echo "Downloading Python pip3 requirements..."
 pip3 install -r requirements.txt
 
 NODEHEAP_LOC=/opt/nodeheap
-CONFIG_FILE=${NODEHEAP_LOC}/node_config.yaml
+CONFIG_FILE=${NODEHEAP_LOC}/node_config.yml
 
 mkdir -p ${NODEHEAP_LOC}
 echo "Deploying script to ${NODEHEAP_LOC}"
@@ -36,10 +36,10 @@ rm -rf ${CONFIG_FILE}
 echo "node_id: ${NODE_ID}" >> ${CONFIG_FILE}
 echo "secret: ${SECRET}" >> ${CONFIG_FILE}
 
-echo "Please follow these steps, to modify the cronjob:"
+echo "Please follow these steps to modify the cronjob:"
 echo "- sudo crontab -e"
-echo "- copy the next line to it, save and exit."
-echo "*/5 * * * * ${NODEHEAP_LOC}/push_node_stats.py"
+echo "- Append the following line to cron, save, and exit."
+echo "*/5 * * * * ${NODEHEAP_LOC}/push_node_stats.py 2>&1 | logger -t nodeheap"
 echo
 echo
 echo "sudo systemctl restart cron.service"

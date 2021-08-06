@@ -17,7 +17,6 @@ CONFIG_FILE = os.path.join(STATS_DIRECTORY, 'node_config.yml')
 API_ENDPOINT_FORMAT = 'https://hud-api.nodeheap.com/stats/{}'
 
 logging.basicConfig(
-    encoding='utf-8',
     format='%(asctime)s.%(msecs)03d %(levelname)s: %(message)s',
     datefmt='%m/%d/%Y %H:%M:%S',
     level=logging.INFO,
