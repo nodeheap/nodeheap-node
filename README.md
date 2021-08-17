@@ -6,9 +6,10 @@ So you decided to use NodeHeap to monitor your node and Shyft operations? Good c
 
 As we're in Beta, you'll need to give us some information out of band.
 1) Sealer node name
-2) Coinbase address (to track balance)
-3) E-mails of those you want to access our dashboard (we use Google SSO)
-4) Phone numbers that you want to receive text alerts
+2) Sealer address (to track mining)
+3) Coinbase address (to track balance)
+4) E-mails of those you want to access our dashboard (we use Google SSO)
+5) Phone numbers that you want to receive text alerts
 
 ### Sending stats to NodeHeap from your node
 
