@@ -42,9 +42,16 @@ You can inspect logs from the script at `/opt/nodeheap/current.log`. Logs from t
 
 NodeHeap will send notifications when your node is not sending stats, offline, not sealing, disconnected from Tor, or the balance is not changing as expected.
 
-## Future
+## Roadmap
 
-Feature requests welcome. We'll be working on improving our look and experience. We are also moving to expand to relays.
+Feature requests welcome.
+
+- Add support for more nodes: relays and backup sealers
+- Heavy investment into the UI for a more beautiful experience, better graphs, and functionality for self-service setup and configuration
+- Price integration: See mining revenue in fiat, expected earnings, total earned
+- Tax compliance: view live tax liability, export daily mining & price data to accountant
+- Bridge activity: volume across the bridge
+- Add webhooks to initiate an action (e.g. restart node) upon getting a notification (e.g. node is down).
 
 
 \- The NodeHeap team
