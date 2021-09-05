@@ -11,6 +11,8 @@ As we're in Beta, you'll need to give us some information out of band.
 4) E-mails of those you want to access our dashboard (we use Google SSO)
 5) Phone numbers that you want to receive text alerts
 
+After this is done, you'll get some access at [nodeheap.com](https://www.nodeheap.com/).
+
 ### Sending stats to NodeHeap from your node
 
 To push stats up to the NodeHeap service at a regular interval, you'll need to run a cronjob on your node.
