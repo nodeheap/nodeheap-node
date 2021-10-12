@@ -98,10 +98,14 @@ class Collector():
         Get CPU data.
         """
         coretemp_avg = 0
-        data = psutil.sensors_temperatures()['coretemp']
-        for temp in data:
-            coretemp_avg = coretemp_avg + temp.current
-        coretemp_avg = int(coretemp_avg/len(data))
+        try:
+            data = psutil.sensors_temperatures()['coretemp']
+            for temp in data:
+                coretemp_avg = coretemp_avg + temp.current
+            coretemp_avg = int(coretemp_avg/len(data))
+        except Exception:
+            coretemp_avg = 0
+
 
         cpu_usage = psutil.cpu_percent()
         return(coretemp_avg, cpu_usage)
