@@ -5,17 +5,19 @@
 So you decided to use NodeHeap to monitor your node and Shyft operations? Good choice.
 
 As we're in Beta, you'll need to give us some information out of band.
-1) Sealer node name
-2) Sealer address (to track mining)
-3) Coinbase address (to track balance)
-4) E-mails of those you want to access our dashboard (we use Google SSO)
-5) Phone numbers that you want to receive text alerts
+1) Sealer address (to track mining)
+2) Coinbase address (to track balance)
+3) E-mail of an initial person for dashboard access (we use Google SSO)
 
-After this is done, you'll get some access at [nodeheap.com](https://www.nodeheap.com/).
+After this is done, your home is at [nodeheap.com](https://www.nodeheap.com/). From there, you can add people to your team, enable text alerts, add nodes, etc.
+
+A lot of functionality is unlocked just like that! Read further for lower-level monitoring.
 
 ### Sending stats to NodeHeap from your node
 
 To get a deeper level of monitoring, you can push stats up to the NodeHeap service from your node at a regular interval via cronjob. This lets you detect if your node is up, having connectivity or hardware problems, and anything else you'd want to monitor. This will generally also alert you faster (~5 mins) if something is amiss.
+
+To start, go to Settings->Nodes on your dashboard. Add a node there, and you'll see the ID and secret you'll need going forward.
 
 #### Automatic deploy
 
@@ -46,12 +48,11 @@ NodeHeap will send notifications when your node is not sending stats, offline, n
 
 Feature requests welcome.
 
-- Add support for more nodes: relays and backup sealers
-- Heavy investment into the UI for a more beautiful experience, better graphs, and functionality for self-service setup and configuration
-- Price integration: See mining revenue in fiat, expected earnings, total earned
+- Add support for more nodes: backup sealers
 - Tax compliance: view live tax liability, export daily mining & price data to accountant
 - Bridge activity: volume across the bridge
 - Add webhooks to initiate an action (e.g. restart node) upon getting a notification (e.g. node is down).
+- Add wallets to watch
 
 
 \- The NodeHeap team
