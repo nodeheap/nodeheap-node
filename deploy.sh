@@ -30,11 +30,21 @@ echo
 echo "Specify the secret:"
 read SECRET
 
+echo
+echo "Specify Sealer or Relay:"
+read ROLE
+
+echo
+echo "Specify Network Interface:"
+read NETINTERFACE
+
 echo "Preparing config file..."
 rm -rf ${CONFIG_FILE}
 
 echo "node_id: ${NODE_ID}" >> ${CONFIG_FILE}
 echo "secret: ${SECRET}" >> ${CONFIG_FILE}
+echo "role: ${ROLE}" >> ${CONFIG_FILE}
+echo "net-interface: ${NETINTERFACE}" >> ${CONFIG_FILE}
 
 echo "Please follow these steps to modify the cronjob:"
 echo "- sudo crontab -e"

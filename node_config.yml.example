@@ -1,2 +1,4 @@
 node_id: 'a-36-char-id'
 secret: 'a-22-char-secret'
+role: relay
+net-interface: wlp3s0
