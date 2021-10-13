@@ -31,7 +31,7 @@ echo "Specify the secret:"
 read SECRET
 
 echo
-echo "Specify Sealer or Relay:"
+echo "Specify node type (sealer, relay):"
 read ROLE
 
 echo
