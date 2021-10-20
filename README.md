@@ -4,13 +4,9 @@
 
 So you decided to use NodeHeap to monitor your node and Shyft operations? Good choice.
 
-As we're in Beta, you'll need to give us some information out of band.
-1) If we don't already have it, your validator key & coinbase address (to track seaing and balances)
-2) E-mail of an initial person for dashboard access (we use Google SSO)
+Your home is at [nodeheap.com](https://www.nodeheap.com/). From there, you can add people to your team, enable text alerts, add nodes, etc.
 
-After this is done, your home is at [nodeheap.com](https://www.nodeheap.com/). From there, you can add people to your team, enable text alerts, add nodes, etc.
-
-A lot of functionality is unlocked just like that! Read further for lower-level monitoring.
+A lot of functionality is unlocked just like that! Read further for lower-level monitoring of individual nodes.
 
 ### Sending stats to NodeHeap from your node
 
@@ -47,10 +43,11 @@ NodeHeap will send notifications when your node is not sending stats, offline, n
 
 Feature requests welcome.
 
+- Add webhooks to initiate an action (e.g. restart node) upon getting a notification (e.g. node is down)
+- Generate custom reports as a CSV
 - Add support for more nodes: backup sealers
 - Tax compliance: view live tax liability, export daily mining & price data to accountant
 - Bridge activity: volume across the bridge
-- Add webhooks to initiate an action (e.g. restart node) upon getting a notification (e.g. node is down).
 - Add wallets to watch
 
 
