@@ -30,29 +30,40 @@ echo
 echo "Specify the secret:"
 read SECRET
 
-echo
-echo "Specify node type (sealer, relay):"
+echo 
+echo "Is this node a sealer ? (y/n)"
+echo "*** If the answer is no, the node will be treated as a relay!"
 read ROLE
 
-echo
-echo "Specify Network Interface:"
-read NETINTERFACE
+if [ "$ROLE" == y ]
+then
+  ROLE="sealer"
+else
+  ROLE="relay"
+fi
+
 
 echo "Preparing config file..."
 rm -rf ${CONFIG_FILE}
 
+echo "Autodetecting network interface to monitor..."
+NIF=$(/sbin/ip route | awk '/default/ { print $5 }')
+
+
 echo "node_id: ${NODE_ID}" >> ${CONFIG_FILE}
 echo "secret: ${SECRET}" >> ${CONFIG_FILE}
 echo "role: ${ROLE}" >> ${CONFIG_FILE}
-echo "net-interface: ${NETINTERFACE}" >> ${CONFIG_FILE}
+echo "net-interface: ${NIF}" >> ${CONFIG_FILE}
 
 echo "Please follow these steps to modify the cronjob:"
 echo "- sudo crontab -e"
 echo "- Append the following line to cron, save, and exit."
 echo "*/5 * * * * ${NODEHEAP_LOC}/push_node_stats.py 2>&1 | logger -t nodeheap"
 echo
-echo
+echo "Restart cron service with"
 echo "sudo systemctl restart cron.service"
+echo "or"
+echo "sudo systemctl restart crond.service"
 
 touch ${NODEHEAP_LOC}/current.log
 
