@@ -14,7 +14,7 @@ import yaml
 # Only for development purposes!!!
 # Set this value to False for deployment.
 # Leaving DEV_MODE at True, could lead to inaccurate data in reporting.
-DEV_MODE = True
+DEV_MODE = False
 
 RELAY = "relay"
 SEALER = "sealer"
