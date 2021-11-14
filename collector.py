@@ -104,7 +104,7 @@ class Collector():
                 coretemp_avg = coretemp_avg + temp.current
             coretemp_avg = int(coretemp_avg/len(data))
         except Exception:
-            coretemp_avg = 0
+            coretemp_avg = None
 
 
         cpu_usage = psutil.cpu_percent()
@@ -191,11 +191,27 @@ class Collector():
         for (json_vals, values) in raw_data:
             if len(json_vals)>1:
                 for json_val, value in zip(json_vals, values):
-                    data[json_val] = value
+
+                    """
+                    Don't add the value into JSON response if the
+                    value is None.
+                    """
+                    if value is not None:
+                        data[json_val] = value
+                    else:
+                        continue
             else:
                 json_val = json_vals[0]
                 value = values
-                data[json_val] = value
+                
+                """
+                Don't add the value into JSON response if the
+                value is None.
+                """
+                if value is not None:
+                    data[json_val] = value
+                else:
+                    continue
                 
         return(data)
             
