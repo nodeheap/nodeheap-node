@@ -1,5 +1,11 @@
 #!/bin/bash
 
+###
+### TODO
+###
+### Check if pip3 is installed.
+### In Ubuntu it is python3-pip
+
 echo "Auto nodestats deploy script!"
 
 # Determine which user called the script, 
@@ -9,6 +15,15 @@ if [ $SUDO_USER ]; then user=$SUDO_USER; else user=`whoami`; fi
 if [[ $EUID -ne 0 ]]; then
   echo "This script must be run as root" 
   exit 1
+fi
+
+echo "Checking for pip3..."
+if [ `which pip3` ] 
+then
+    echo "Found pip3 at: " `which pip3`
+else
+    echo "pip not found. Installing"
+    apt-get install python3-pip
 fi
 
 echo "Downloading Python pip3 requirements..."
@@ -31,16 +46,38 @@ echo "Specify the secret:"
 read SECRET
 
 echo 
-echo "Is this node a sealer ? (y/n)"
-echo "*** If the answer is no, the node will be treated as a relay!"
+echo "Please enter the node role:"
+echo "(s)ealer"
+echo "(r)elay"
+echo "(b)ridge"
+echo ""
 read ROLE
 
-if [ "$ROLE" == y ]
-then
-  ROLE="sealer"
-else
-  ROLE="relay"
-fi
+case $ROLE in
+
+  s)
+    echo -n "Sealer mode"
+    ROLE="sealer"
+    ;;
+
+  r)
+    echo -n "Relay mode"
+    ROLE="relay"
+    ;;
+
+  b)
+    echo -n "Bridge mode"
+    ROLE="bridge"
+    echo ""
+    echo "Enter full path to docker-compose.yml (including the .yml filename): "
+    read DOCKER_YML_PATH
+    ;;
+
+  *)
+    echo -n "Unknown mode"
+    ROLE=""
+    ;;
+esac
 
 
 echo "Preparing config file..."
@@ -54,6 +91,12 @@ echo "node_id: ${NODE_ID}" >> ${CONFIG_FILE}
 echo "secret: ${SECRET}" >> ${CONFIG_FILE}
 echo "role: ${ROLE}" >> ${CONFIG_FILE}
 echo "net-interface: ${NIF}" >> ${CONFIG_FILE}
+if [ $ROLE == 'bridge' ]
+then
+    echo "docker-yml: ${DOCKER_YML_PATH}" >> ${CONFIG_FILE}
+    echo "bridge-check-interval: 90" >> ${CONFIG_FILE}
+fi
+
 
 echo "Please follow these steps to modify the cronjob:"
 echo "- sudo crontab -e"

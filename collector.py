@@ -7,7 +7,7 @@ from subprocess import Popen, PIPE
 import re
 import os
 import psutil
-from datetime import timedelta
+from datetime import timedelta, datetime
 from time import strftime, localtime
 import yaml
 
@@ -49,6 +49,13 @@ class Collector():
                     [['total_mem', 'mem_used', 'mem_free'], self.memory()]
                 ],
                 BRIDGE : [
+                    [['total_space', 'used_space', 'free_space'], self.du()], 
+                    [['cpu_temp', 'cpu_usage'], self.cpu_stats()], 
+                    [['uptime'], self.uptime()],
+                    [['tx_bytes', 'rx_bytes'], self.network()],
+                    [['num_users_logged_in'], self.logged_in_users()], 
+                    [['total_mem', 'mem_used', 'mem_free'], self.memory()],
+                    [['is_bridge_healthy'], self.isBridgeHealthy()]
                 ]
             }
 
@@ -186,7 +193,7 @@ class Collector():
         Return:
             JSON data.
         """
-        
+
         data = {}
         for (json_vals, values) in raw_data:
             if len(json_vals)>1:
@@ -203,7 +210,7 @@ class Collector():
             else:
                 json_val = json_vals[0]
                 value = values
-                
+
                 """
                 Don't add the value into JSON response if the
                 value is None.
@@ -212,10 +219,55 @@ class Collector():
                     data[json_val] = value
                 else:
                     continue
-                
+
         return(data)
-            
-        
+
+
+    def isBridgeHealthy(self):
+        """
+        Check bridge health.
+        If there is no log pushed for more than bridge_check_interval seconds it will
+        return False which indicates Bridge health is bad.
+        Otherwise return True.
+        """
+        docker_compose_path = self.config['docker-yml']
+        bridge_check_interval = self.config['bridge-check-interval']
+        compose_path="--file="+str(docker_compose_path)
+        process = Popen(['docker-compose', compose_path, 'logs', '--tail=1'], stdout=PIPE, stderr=PIPE)
+        stdout, stderr = process.communicate()
+        p = re.compile("(?m)[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}")
+        data = stdout.decode('utf-8')
+        data = p.findall(data)
+
+        # ['2021-12-08T20:09:20']
+
+        data = data[0].split('T')
+        (logYear, logMonth, logDay) = data[0].split('-')
+        (logHour, logMinute, logSecond) = data[1].split(':')
+
+        logYear = int(logYear)
+        logMonth = int(logMonth)
+        logDay = int(logDay)
+        logHour = int(logHour)
+        logMinute = int(logMinute)
+        logSecond = int(logSecond)
+
+        logTime = datetime(logYear, logMonth, logDay, logHour, logMinute, logSecond)
+        if (DEV_MODE):
+            localTime = datetime(2021, 12, 8, 21, 50, 0)
+        else:
+            (tm_year, tm_mon, tm_day, tm_hour, tm_min, tm_sec, _, _, _) = localtime()
+            localTime = datetime(tm_year, tm_mon, tm_day, tm_hour, tm_min, tm_sec)
+
+        timeDiff = localTime - logTime
+        timeDiff = int(timeDiff.total_seconds())
+
+        if ( timeDiff >= bridge_check_interval):
+            return False
+        else:
+            return True
+
+
     def collect_data(self):
         node_role = self.config['role']
         raw_data = self.function_call_list[node_role]
