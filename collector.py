@@ -26,7 +26,7 @@ class Collector():
         """
         """
         self.config = config
-        
+
         self.function_call_list = \
             {   SEALER : [
                     [['total_space', 'used_space', 'free_space'], self.du()], 
@@ -36,7 +36,8 @@ class Collector():
                     [['num_users_logged_in'], self.logged_in_users()], 
                     [['is_node_running'], self.checkIfProcessRunning('Nethermind.Runner')],
                     [['is_tor_running'], self.checkIfProcessRunning('tor')], 
-                    [['total_mem', 'mem_used', 'mem_free'], self.memory()]
+                    [['total_mem', 'mem_used', 'mem_free'], self.memory()],
+                    [['last_sealed_block_time'], self.lastSealedBlock()],
                 ],
                 RELAY : [
                     [['total_space', 'used_space', 'free_space'], self.du()], 
@@ -230,8 +231,15 @@ class Collector():
         return False which indicates Bridge health is bad.
         Otherwise return True.
         """
-        docker_compose_path = self.config['docker-yml']
-        bridge_check_interval = self.config['bridge-check-interval']
+
+        # If node is running in bridge mode, then read the config.
+        # Otherwise return False.
+        if (self.config['role'] == 'bridge'):
+            docker_compose_path = self.config['docker-yml']
+            bridge_check_interval = self.config['bridge-check-interval']
+        else:
+            return(False)
+
         compose_path="--file="+str(docker_compose_path)
         process = Popen(['docker-compose', compose_path, 'logs', '--tail=1'], stdout=PIPE, stderr=PIPE)
         stdout, stderr = process.communicate()
@@ -262,7 +270,7 @@ class Collector():
         timeDiff = localTime - logTime
         timeDiff = int(timeDiff.total_seconds())
 
-        if ( timeDiff >= bridge_check_interval):
+        if (timeDiff >= bridge_check_interval):
             return False
         else:
             return True
