@@ -161,7 +161,8 @@ class Collector():
         timeZone = 0
         continuity_pass = None
         is_nethermind_healthy = None
-        node_error = ""
+        node_error = None
+        err_msg = None
 
         if not DEV_MODE:    
             f = open("/var/log/nethermind.log", "r")
