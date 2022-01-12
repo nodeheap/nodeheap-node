@@ -20,6 +20,7 @@ RELAY = "relay"
 SEALER = "sealer"
 BRIDGE = "bridge"
 
+CONTINUITY_CHECK_LIMIT = 10
 
 class Collector():
     def __init__(self, config):
@@ -37,7 +38,7 @@ class Collector():
                     [['is_node_running'], self.checkIfProcessRunning('Nethermind.Runner')],
                     [['is_tor_running'], self.checkIfProcessRunning('tor')], 
                     [['total_mem', 'mem_used', 'mem_free'], self.memory()],
-                    [['last_sealed_block_time'], self.lastSealedBlock()],
+                    [['last_sealed_block_time', 'is_nethermind_healthy', 'node_error'], self.lastSealedBlock()],
                 ],
                 RELAY : [
                     [['total_space', 'used_space', 'free_space'], self.du()], 
@@ -158,6 +159,10 @@ class Collector():
         s_date = 0
         s_time = 0
         timeZone = 0
+        continuity_pass = None
+        is_nethermind_healthy = None
+        node_error = ""
+
         if not DEV_MODE:    
             f = open("/var/log/nethermind.log", "r")
 
@@ -186,7 +191,34 @@ class Collector():
         timeZone = strftime("%z")
         timeZone = timeZone[:3] + ":" + timeZone[3:]
         time_string = "{}T{}{}".format(s_date, s_time, timeZone)
-        return (time_string)
+
+        """
+        Perform a continuity check, by comparing the last 10 sealed blocks.
+        In case the checker finds 2 sealed blocks which difference is less
+        than the value set in CONTINUITY_CHECK_LIMIT, then alert will be sent
+        to the operator.
+        """
+        print("Performing seal continuity and health check!!!")
+
+        old_block = 0
+        for (_, _, s_block) in seal_data_ok[-10:]:
+            if (int(s_block) - int(old_block) < CONTINUITY_CHECK_LIMIT):
+                err_msg = "Continuity check FAILED (difference {}) at block {}-{}.".format(int(s_block) - int(old_block), int(s_block), int(old_block))
+                print(err_msg)
+                continuity_pass = False
+            else:
+                continuity_pass = True
+            old_block = s_block
+
+        if (continuity_pass == True):
+            is_nethermind_healthy = True
+            node_error = None
+        else:
+            is_nethermind_healthy = False
+            node_error = err_msg
+
+
+        return (time_string, is_nethermind_healthy, node_error)
 
 
     def generate_json(self, raw_data):
