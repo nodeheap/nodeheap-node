@@ -155,6 +155,9 @@ class Collector():
         print("Seal check")
         sealed_cnt = 0
         sealed_inv = 0
+        s_date = 0
+        s_time = 0
+        timeZone = 0
         if not DEV_MODE:    
             f = open("/var/log/nethermind.log", "r")
 
@@ -172,9 +175,9 @@ class Collector():
                 if "seal parameters incorrect" in line:
                     sealed_inv = sealed_inv + 1
                     temp = line.split(' ')
-                    i_date = temp[0]
-                    i_time = temp[1].split('|')[0]
-                    seal_data_inv.append([i_date, i_time])
+                    s_date = temp[0]
+                    s_time = temp[1].split('|')[0]
+                    seal_data_inv.append([s_date, s_time])
         else:
             (tm_year, tm_mon, tm_day, tm_hour, tm_min, tm_sec, _, _, _) = localtime()
             s_date = "{}-{}-{}".format(tm_year, tm_mon, tm_day)
