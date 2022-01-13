@@ -153,6 +153,12 @@ class Collector():
 
 
     def lastSealedBlock(self):
+        if (self.config['role'] == SEALER):
+            pass
+        else:
+            print("lastSealedBlock function not supported on this node!")
+            return False
+
         print("Seal check")
         sealed_cnt = 0
         sealed_inv = 0
